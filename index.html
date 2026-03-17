@@ -21,12 +21,11 @@
     .logo span{color:var(--red)}
     .logo-sub{font-size:0.65rem;font-weight:400;color:var(--grey);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-top:-2px}
     .hero{text-align:center;padding:3rem 0 2.5rem}
-    .hero-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,0,51,0.1);border:1px solid rgba(255,0,51,0.2);border-radius:20px;padding:0.35rem 1rem;font-size:0.75rem;font-weight:500;color:#ff6680;margin-bottom:1.5rem;animation:fadeDown 0.6s ease forwards}
-    .hero-title{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,7vw,4rem);font-weight:800;line-height:1.1;letter-spacing:-0.03em;margin-bottom:1rem;animation:fadeDown 0.6s ease 0.1s both}
+    .hero-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,0,51,0.1);border:1px solid rgba(255,0,51,0.2);border-radius:20px;padding:0.35rem 1rem;font-size:0.75rem;font-weight:500;color:#ff6680;margin-bottom:1.5rem}
+    .hero-title{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,7vw,4rem);font-weight:800;line-height:1.1;letter-spacing:-0.03em;margin-bottom:1rem}
     .hero-title .accent{color:var(--red)}
-    .hero-sub{color:var(--grey);font-size:1rem;max-width:480px;margin:0 auto 2rem;line-height:1.6;animation:fadeDown 0.6s ease 0.2s both}
-    @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
-    .search-box{background:var(--dark3);border:1px solid var(--border);border-radius:16px;padding:0.5rem 0.5rem 0.5rem 1.25rem;display:flex;align-items:center;gap:0.75rem;transition:border-color 0.2s,box-shadow 0.2s;animation:fadeDown 0.6s ease 0.3s both;margin-bottom:1rem}
+    .hero-sub{color:var(--grey);font-size:1rem;max-width:480px;margin:0 auto 2rem;line-height:1.6}
+    .search-box{background:var(--dark3);border:1px solid var(--border);border-radius:16px;padding:0.5rem 0.5rem 0.5rem 1.25rem;display:flex;align-items:center;gap:0.75rem;transition:border-color 0.2s;margin-bottom:1rem}
     .search-box:focus-within{border-color:rgba(255,0,51,0.4);box-shadow:0 0 0 3px rgba(255,0,51,0.08)}
     .search-icon{font-size:1.1rem;flex-shrink:0;opacity:0.5}
     .search-input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--white);min-width:0}
@@ -34,7 +33,7 @@
     .btn-fetch{background:var(--red);color:#fff;border:none;border-radius:12px;padding:0.75rem 1.5rem;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.15s;white-space:nowrap;flex-shrink:0}
     .btn-fetch:hover{background:var(--red-dim);transform:translateY(-1px)}
     .btn-fetch:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-    .features{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;animation:fadeDown 0.6s ease 0.4s both}
+    .features{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
     .feature{display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--grey)}
     .feature-dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
     .status-box{border-radius:12px;margin-top:1.5rem;padding:1.25rem;font-size:0.9rem;display:none}
@@ -54,7 +53,7 @@
     .download-section{padding:1.25rem}
     .section-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--grey);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem}
     .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-    .dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:1.25rem}
+    .dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.65rem;margin-bottom:1.25rem}
     .dl-btn{background:var(--dark4);border:1px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left;color:var(--white);font-family:'DM Sans',sans-serif;text-decoration:none;display:block}
     .dl-btn:hover{border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.06);transform:translateY(-1px)}
     .dl-btn .q-label{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:0.2rem}
@@ -64,6 +63,7 @@
     .audio-btn:hover{background:linear-gradient(135deg,rgba(255,0,51,0.18),rgba(255,0,51,0.1));transform:translateY(-1px)}
     .audio-details{text-align:left}
     .audio-details small{font-size:0.72rem;color:var(--grey);font-weight:400;font-family:'DM Sans',sans-serif;display:block}
+    .processing-note{font-size:0.75rem;color:var(--grey);margin-top:0.75rem;text-align:center;font-style:italic}
     .how-section{padding:3rem 0 2rem;text-align:center}
     .how-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:2rem;letter-spacing:-0.02em}
     .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
@@ -82,7 +82,7 @@
       .steps{grid-template-columns:1fr}
       .search-box{flex-wrap:wrap}
       .btn-fetch{width:100%;justify-content:center;display:flex}
-      .dl-grid{grid-template-columns:1fr}
+      .dl-grid{grid-template-columns:1fr 1fr}
     }
   </style>
 </head>
@@ -94,7 +94,6 @@
       <div class="logo">YT<span>Save</span><span class="logo-sub">YouTube Downloader</span></div>
       <div style="font-size:0.75rem;color:var(--grey)">Free · Fast · Easy</div>
     </header>
-
     <div class="hero">
       <div class="hero-badge">▶ YouTube Video & Audio Downloader</div>
       <h1 class="hero-title">Download Any<br/><span class="accent">YouTube Video</span><br/>In Seconds</h1>
@@ -128,10 +127,9 @@
       <div class="steps">
         <div class="step"><div class="step-num">1</div><h3>Copy URL</h3><p>Copy the YouTube video link from your browser or app</p></div>
         <div class="step"><div class="step-num">2</div><h3>Paste & Fetch</h3><p>Paste the URL above and click Fetch Video</p></div>
-        <div class="step"><div class="step-num">3</div><h3>Download</h3><p>Choose your quality and download instantly</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Download</h3><p>Choose your quality and tap to download</p></div>
       </div>
     </div>
-
     <footer>
       Made with ❤️ by
       <a href="https://www.instagram.com/bettercallvrd?igsh=MWI0dm0xcDI4ZzVueA==" target="_blank" rel="noopener" class="footer-link">@bettercallvrd</a>
@@ -141,120 +139,106 @@
 
   <script>
     document.getElementById('url-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') fetchVideo();
+      if(e.key==='Enter') fetchVideo();
     });
 
-    function getVideoId(url) {
-      const m = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/);
-      return m ? m[1] : '';
+    function showLoading(msg){
+      document.getElementById('loading-text').textContent=msg||'Fetching video…';
+      document.getElementById('status-loading').style.display='flex';
+      document.getElementById('status-error').style.display='none';
+      document.getElementById('result-card').style.display='none';
+    }
+    function showError(msg){
+      document.getElementById('status-loading').style.display='none';
+      document.getElementById('status-error').textContent='❌ '+msg;
+      document.getElementById('status-error').style.display='block';
+    }
+    function hideStatus(){
+      document.getElementById('status-loading').style.display='none';
+      document.getElementById('status-error').style.display='none';
     }
 
-    function showLoading(msg) {
-      document.getElementById('loading-text').textContent = msg || 'Fetching video…';
-      document.getElementById('status-loading').style.display = 'flex';
-      document.getElementById('status-error').style.display = 'none';
-      document.getElementById('result-card').style.display = 'none';
-    }
-    function showError(msg) {
-      document.getElementById('status-loading').style.display = 'none';
-      document.getElementById('status-error').textContent = '❌ ' + msg;
-      document.getElementById('status-error').style.display = 'block';
-    }
-    function hideStatus() {
-      document.getElementById('status-loading').style.display = 'none';
-      document.getElementById('status-error').style.display = 'none';
-    }
-
-    async function fetchVideo() {
-      const url = document.getElementById('url-input').value.trim();
-      if (!url) { showError('Please paste a YouTube URL first!'); return; }
-      if (!url.includes('youtube.com') && !url.includes('youtu.be')) {
-        showError('Please enter a valid YouTube URL'); return;
+    async function fetchVideo(){
+      const url=document.getElementById('url-input').value.trim();
+      if(!url){showError('Please paste a YouTube URL first!');return;}
+      if(!url.includes('youtube.com')&&!url.includes('youtu.be')){
+        showError('Please enter a valid YouTube URL');return;
       }
+      const btn=document.getElementById('fetch-btn');
+      btn.disabled=true; btn.textContent='Fetching…';
+      showLoading('Fetching video details…');
 
-      const btn = document.getElementById('fetch-btn');
-      btn.disabled = true; btn.textContent = 'Fetching…';
-
-      const vidId = getVideoId(url);
-      const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
-
-      // Fetch both video and audio simultaneously
-      showLoading('Fetching video…');
-      try {
-        const [videoRes, audioRes] = await Promise.all([
-          fetch(`/api/fetch?url=${encodeURIComponent(url)}&type=video`),
-          fetch(`/api/fetch?url=${encodeURIComponent(url)}&type=audio`)
-        ]);
-
-        const videoData = await videoRes.json();
-        const audioData = await audioRes.json();
-
+      try{
+        const res=await fetch(`/api/fetch?url=${encodeURIComponent(url)}&type=info`);
+        const data=await res.json();
+        if(data.error) throw new Error(data.error);
         hideStatus();
-        renderResult(videoData, audioData, url, thumb, vidId);
-      } catch(err) {
-        showError(err.message || 'Something went wrong. Please try again.');
-      } finally {
-        btn.disabled = false; btn.textContent = 'Fetch Video';
+        renderResult(data, url);
+      }catch(err){
+        showError(err.message||'Something went wrong. Please try again.');
+      }finally{
+        btn.disabled=false; btn.textContent='Fetch Video';
       }
     }
 
-    function renderResult(videoData, audioData, url, thumb, vidId) {
-      const card = document.getElementById('result-card');
-      const info = document.getElementById('video-info');
-      const dlEl = document.getElementById('download-section');
+    function renderResult(data, url){
+      const card=document.getElementById('result-card');
+      const info=document.getElementById('video-info');
+      const dlEl=document.getElementById('download-section');
 
-      // Cobalt returns: status, url, filename (for tunnel/redirect)
-      const videoUrl = videoData?.url || '';
-      const audioUrl = audioData?.url || '';
-      const filename = videoData?.filename || videoData?.name || 'video';
-      const title    = filename.replace(/\.[^.]+$/, '') || 'YouTube Video';
+      const title=data.title||'YouTube Video';
+      const thumb=data.thumbnail||'';
+      const author=data.author||'';
+      const videoData=data.videoData||{};
+      const videoId=data.videoId||'';
 
-      info.innerHTML = `
-        <img class="video-thumb" src="${thumb}" alt="thumbnail" onerror="this.style.display='none'"/>
+      info.innerHTML=`
+        <img class="video-thumb" src="${thumb}" alt="thumb" onerror="this.style.display='none'"/>
         <div class="video-details">
           <div class="video-title">${title}</div>
           <div class="video-meta">
+            ${author?`<span class="meta-tag">${author}</span>`:''}
             <span class="meta-tag red">▶ YouTube</span>
-            <span class="meta-tag">HD Available</span>
           </div>
         </div>`;
 
-      let html = '';
+      let html='';
 
-      if (videoUrl) {
-        html += `
-          <div class="section-label">Video</div>
+      // Video download
+      const mp4url = videoData?.download_url || videoData?.url || videoData?.link || '';
+      if(mp4url){
+        html+=`<div class="section-label">Video</div>
           <div class="dl-grid">
-            <a class="dl-btn" href="${videoUrl}" target="_blank" rel="noopener">
-              <div class="q-label">1080p <span class="q-badge">HD</span></div>
-              <div class="q-sub">Best Quality · MP4</div>
+            <a class="dl-btn" href="${mp4url}" target="_blank" rel="noopener">
+              <div class="q-label">HD <span class="q-badge">MP4</span></div>
+              <div class="q-sub">Best Quality</div>
             </a>
-            <a class="dl-btn" href="/api/fetch?url=${encodeURIComponent(url)}&type=video&q=720" target="_blank" rel="noopener">
-              <div class="q-label">720p <span class="q-badge">HD</span></div>
-              <div class="q-sub">Good Quality · MP4</div>
+          </div>`;
+      } else {
+        html+=`<div class="section-label">Video</div>
+          <div class="dl-grid">
+            <a class="dl-btn" href="/api/fetch?url=${encodeURIComponent(url)}&type=video" target="_blank" rel="noopener">
+              <div class="q-label">HD <span class="q-badge">MP4</span></div>
+              <div class="q-sub">Best Quality</div>
             </a>
           </div>`;
       }
 
-      if (audioUrl) {
-        html += `
-          <div class="section-label">Audio Only</div>
-          <a class="audio-btn" href="${audioUrl}" target="_blank" rel="noopener">
-            <span style="font-size:1.2rem">🎵</span>
-            <div class="audio-details">Download MP3 <small>Audio only · Best quality</small></div>
-          </a>`;
-      }
+      // Audio download
+      html+=`<div class="section-label">Audio Only</div>
+        <a class="audio-btn" href="/api/fetch?url=${encodeURIComponent(url)}&type=audio" target="_blank" rel="noopener">
+          <span style="font-size:1.2rem">🎵</span>
+          <div class="audio-details">Download MP3
+            <small>Audio only · High quality</small>
+          </div>
+        </a>
+        <p class="processing-note">⏳ MP3 may take a few seconds to process</p>`;
 
-      if (!videoUrl && !audioUrl) {
-        html = `<p style="color:var(--grey);text-align:center;padding:1rem;font-size:0.88rem">
-          ⚠️ Could not get download links. Try a different video or check if it's age-restricted.</p>`;
-      }
-
-      dlEl.innerHTML = html;
-      card.style.display = 'block';
-      setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
+      dlEl.innerHTML=html;
+      card.style.display='block';
+      setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
     }
   </script>
 </body>
-  </html>
-        
+        </html>
+  
