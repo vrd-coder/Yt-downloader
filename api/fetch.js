@@ -7,7 +7,6 @@ export default async function handler(req, res) {
   const { url, type } = req.query;
   if (!url) { res.status(400).json({ error: 'url required' }); return; }
 
-  // Extract video ID
   const videoId = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
   if (!videoId) { res.status(400).json({ error: 'Invalid YouTube URL' }); return; }
 
@@ -16,40 +15,21 @@ export default async function handler(req, res) {
 
   try {
     if (type === 'audio') {
-      // Get MP3 download link
       const response = await fetch(
         `https://${API_HOST}/get_mp3_download_link/${videoId}?quality=high&wait_until_the_file_is_ready=false`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-rapidapi-host': API_HOST,
-            'x-rapidapi-key': API_KEY,
-          }
-        }
+        { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-rapidapi-host': API_HOST, 'x-rapidapi-key': API_KEY } }
       );
       const data = await response.json();
       res.status(200).json(data);
       return;
     }
 
-    // For video info - use thumbnail + title from oEmbed (free, no API needed)
-    const oembedRes = await fetch(
-      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`
-    );
+    const oembedRes = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
     const oembedData = await oembedRes.json();
 
-    // Also get mp4 link
     const videoRes = await fetch(
       `https://${API_HOST}/get_mp4_download_link/${videoId}?quality=auto&wait_until_the_file_is_ready=false`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-rapidapi-host': API_HOST,
-          'x-rapidapi-key': API_KEY,
-        }
-      }
+      { method: 'GET', headers: { 'Content-Type': 'application/json', 'x-rapidapi-host': API_HOST, 'x-rapidapi-key': API_KEY } }
     );
     const videoData = await videoRes.json();
 
