@@ -7,11 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --red:#ff0033;--red-dim:#cc0028;--dark:#0a0a0a;--dark2:#111;
-      --dark3:#1a1a1a;--dark4:#222;--white:#fff;--grey:#888;
-      --grey-light:#ccc;--border:rgba(255,255,255,0.08);
-    }
+    :root{--red:#ff0033;--red-dim:#cc0028;--dark:#0a0a0a;--dark3:#1a1a1a;--dark4:#222;--white:#fff;--grey:#888;--grey-light:#ccc;--border:rgba(255,255,255,0.08)}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;overflow-x:hidden}
@@ -35,15 +31,15 @@
     .search-icon{font-size:1.1rem;flex-shrink:0;opacity:0.5}
     .search-input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--white);min-width:0}
     .search-input::placeholder{color:var(--grey)}
-    .btn-fetch{background:var(--red);color:#fff;border:none;border-radius:12px;padding:0.75rem 1.5rem;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;white-space:nowrap;flex-shrink:0}
-    .btn-fetch:hover{background:var(--red-dim);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,0,51,0.3)}
+    .btn-fetch{background:var(--red);color:#fff;border:none;border-radius:12px;padding:0.75rem 1.5rem;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.15s;white-space:nowrap;flex-shrink:0}
+    .btn-fetch:hover{background:var(--red-dim);transform:translateY(-1px)}
     .btn-fetch:disabled{opacity:0.5;cursor:not-allowed;transform:none}
     .features{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;animation:fadeDown 0.6s ease 0.4s both}
     .feature{display:flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:var(--grey)}
     .feature-dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
-    .status{text-align:center;padding:1.5rem;border-radius:12px;margin-top:1.5rem;font-size:0.9rem;display:none}
-    .status.error{background:rgba(255,0,51,0.08);border:1px solid rgba(255,0,51,0.2);color:#ff6680;display:block}
-    .status.loading{background:var(--dark3);border:1px solid var(--border);color:var(--grey);display:flex;align-items:center;justify-content:center;gap:0.75rem}
+    .status-box{border-radius:12px;margin-top:1.5rem;padding:1.25rem;font-size:0.9rem;display:none}
+    .status-box.error{background:rgba(255,0,51,0.08);border:1px solid rgba(255,0,51,0.2);color:#ff6680}
+    .status-box.loading{background:var(--dark3);border:1px solid var(--border);color:var(--grey);display:flex;align-items:center;justify-content:center;gap:0.75rem}
     .loader{width:20px;height:20px;border:2px solid rgba(255,0,51,0.2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .result-card{background:var(--dark3);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-top:1.5rem;display:none;animation:fadeUp 0.4s ease forwards}
@@ -59,13 +55,13 @@
     .section-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--grey);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem}
     .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
     .quality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.65rem;margin-bottom:1.25rem}
-    .quality-btn{background:var(--dark4);border:1px solid var(--border);border-radius:12px;padding:0.75rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left;color:var(--white);font-family:'DM Sans',sans-serif}
+    .quality-btn{background:var(--dark4);border:1px solid var(--border);border-radius:12px;padding:0.75rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left;color:var(--white);font-family:'DM Sans',sans-serif;text-decoration:none;display:block}
     .quality-btn:hover{border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.06);transform:translateY(-1px)}
     .q-label{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:0.2rem}
     .q-sub{font-size:0.72rem;color:var(--grey)}
     .q-badge{display:inline-block;font-size:0.62rem;background:rgba(255,0,51,0.15);color:#ff6680;border-radius:4px;padding:0.1rem 0.35rem;margin-left:0.3rem;font-weight:700}
-    .audio-btn{width:100%;background:linear-gradient(135deg,rgba(255,0,51,0.1),rgba(255,0,51,0.05));border:1px solid rgba(255,0,51,0.2);border-radius:12px;padding:0.85rem 1.25rem;cursor:pointer;transition:all 0.2s;color:var(--white);font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:0.75rem}
-    .audio-btn:hover{background:linear-gradient(135deg,rgba(255,0,51,0.18),rgba(255,0,51,0.1));transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,0,51,0.15)}
+    .audio-btn{width:100%;background:linear-gradient(135deg,rgba(255,0,51,0.1),rgba(255,0,51,0.05));border:1px solid rgba(255,0,51,0.2);border-radius:12px;padding:0.85rem 1.25rem;cursor:pointer;transition:all 0.2s;color:var(--white);font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+    .audio-btn:hover{background:linear-gradient(135deg,rgba(255,0,51,0.18),rgba(255,0,51,0.1));transform:translateY(-1px)}
     .audio-details{text-align:left}
     .audio-details small{font-size:0.72rem;color:var(--grey);font-weight:400;font-family:'DM Sans',sans-serif;display:block}
     .how-section{padding:3rem 0 2rem;text-align:center}
@@ -116,11 +112,11 @@
       </div>
     </div>
 
-    <div id="status-loading" class="status loading" style="display:none">
+    <div id="status-loading" class="status-box loading" style="display:none">
       <div class="loader"></div>
-      <span id="loading-text">Fetching video details…</span>
+      <span id="loading-text">Fetching video…</span>
     </div>
-    <div id="status-error" class="status error" style="display:none"></div>
+    <div id="status-error" class="status-box error" style="display:none"></div>
 
     <div class="result-card" id="result-card">
       <div class="video-info" id="video-info"></div>
@@ -148,18 +144,8 @@
       if (e.key === 'Enter') fetchVideo();
     });
 
-    function getVideoId(url) {
-      try {
-        const u = new URL(url.startsWith('http') ? url : 'https://' + url);
-        if (u.hostname.includes('youtu.be')) return u.pathname.slice(1).split('?')[0];
-        return u.searchParams.get('v') || '';
-      } catch(e) {}
-      const m = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/);
-      return m ? m[1] : '';
-    }
-
     function showLoading(msg) {
-      document.getElementById('loading-text').textContent = msg;
+      document.getElementById('loading-text').textContent = msg || 'Fetching video…';
       document.getElementById('status-loading').style.display = 'flex';
       document.getElementById('status-error').style.display = 'none';
       document.getElementById('result-card').style.display = 'none';
@@ -173,54 +159,27 @@
       document.getElementById('status-loading').style.display = 'none';
       document.getElementById('status-error').style.display = 'none';
     }
-    function fmtDur(s) {
-      if (!s) return '';
-      return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
-    }
-    function fmtViews(n) {
-      if (!n) return '';
-      if (n>=1e9) return (n/1e9).toFixed(1)+'B views';
-      if (n>=1e6) return (n/1e6).toFixed(1)+'M views';
-      if (n>=1e3) return Math.floor(n/1e3)+'K views';
-      return n+' views';
-    }
-
-    async function callAPI(type, videoId) {
-      const res = await fetch(`/api/fetch?type=${type}&videoId=${videoId}`);
-      if (!res.ok) {
-        const err = await res.json().catch(()=>({error:'API error'}));
-        throw new Error(err.error || 'API request failed');
-      }
-      return res.json();
-    }
 
     async function fetchVideo() {
       const url = document.getElementById('url-input').value.trim();
       if (!url) { showError('Please paste a YouTube URL first!'); return; }
-
-      const videoId = getVideoId(url);
-      if (!videoId) { showError('Invalid YouTube URL. Please check and try again.'); return; }
+      if (!url.includes('youtube.com') && !url.includes('youtu.be')) {
+        showError('Please enter a valid YouTube URL'); return;
+      }
 
       const btn = document.getElementById('fetch-btn');
       btn.disabled = true; btn.textContent = 'Fetching…';
       showLoading('Fetching video details…');
 
       try {
-        const [details, dlData, audioData] = await Promise.allSettled([
-          callAPI('details', videoId),
-          callAPI('video',   videoId),
-          callAPI('audio',   videoId),
-        ]);
+        const res = await fetch(`/api/fetch?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
 
-        if (details.status === 'rejected') throw new Error(details.reason?.message || 'Could not fetch video');
+        if (!res.ok || data.error) throw new Error(data.error || 'Failed to fetch video');
+        if (!data) throw new Error('No data returned');
 
         hideStatus();
-        renderResult(
-          details.value,
-          dlData.status   === 'fulfilled' ? dlData.value   : null,
-          audioData.status=== 'fulfilled' ? audioData.value: null,
-          videoId
-        );
+        renderResult(data, url);
       } catch(err) {
         showError(err.message || 'Something went wrong. Please try again.');
       } finally {
@@ -228,83 +187,79 @@
       }
     }
 
-    function renderResult(details, dlData, audioData, videoId) {
-      const card  = document.getElementById('result-card');
-      const info  = document.getElementById('video-info');
-      const dlEl  = document.getElementById('download-section');
+    function renderResult(data, originalUrl) {
+      const card = document.getElementById('result-card');
+      const info = document.getElementById('video-info');
+      const dlEl = document.getElementById('download-section');
 
-      const title   = details.title || details.videoTitle || 'YouTube Video';
-      const thumb   = details.thumbnail || details.thumbnailUrl || `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-      const dur     = fmtDur(details.duration || details.lengthSeconds);
-      const views   = fmtViews(details.viewCount || details.views);
-      const channel = details.channel || details.author || '';
+      // Y2mate returns: title, thumbnail, duration, links { mp4: {...}, mp3: {...} }
+      const title    = data.title || 'YouTube Video';
+      const thumb    = data.thumbnail || data.thumb || '';
+      const duration = data.duration || data.dur || '';
+
+      // Get video ID for fallback thumbnail
+      const vidMatch = originalUrl.match(/(?:v=|youtu\.be\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+      const vidId    = vidMatch ? vidMatch[1] : '';
+      const thumbUrl = thumb || (vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '');
 
       info.innerHTML = `
-        <img class="video-thumb" src="${thumb}" alt="thumb" onerror="this.src='https://img.youtube.com/vi/${videoId}/mqdefault.jpg'"/>
+        <img class="video-thumb" src="${thumbUrl}" alt="thumb" onerror="this.style.display='none'"/>
         <div class="video-details">
           <div class="video-title">${title}</div>
           <div class="video-meta">
-            ${channel ? `<span class="meta-tag">${channel}</span>` : ''}
-            ${dur     ? `<span class="meta-tag red">⏱ ${dur}</span>` : ''}
-            ${views   ? `<span class="meta-tag">${views}</span>` : ''}
+            ${duration ? `<span class="meta-tag red">⏱ ${duration}</span>` : ''}
+            <span class="meta-tag">YouTube</span>
           </div>
         </div>`;
 
       let html = '';
 
-      // Video formats
-      const fmts = dlData?.formats || dlData?.qualities || dlData?.videoQualities || details.formats || details.qualities || [];
-      if (fmts.length > 0) {
+      // Video formats — Y2mate returns data.links.mp4
+      const mp4 = data.links?.mp4 || data.mp4 || data.video || {};
+      const mp4Keys = Object.keys(mp4);
+
+      if (mp4Keys.length > 0) {
         html += `<div class="section-label">Video Quality</div><div class="quality-grid">`;
-        fmts.slice(0,8).forEach(f => {
-          const label = f.quality || f.resolution || f.qualityLabel || f.label || 'HD';
-          const dlUrl = f.url || f.downloadUrl || f.link || '';
+        mp4Keys.forEach(key => {
+          const fmt   = mp4[key];
+          const label = fmt.q || fmt.quality || key;
+          const dlUrl = fmt.url || fmt.link || fmt.downloadUrl || '';
+          const size  = fmt.size || '';
           const isHD  = label.includes('720') || label.includes('1080') || label.includes('4K');
-          html += `<button class="quality-btn" onclick="dl('${dlUrl}','${title}_${label}.mp4')">
-            <div class="q-label">${label}${isHD?'<span class="q-badge">HD</span>':''}</div>
-            <div class="q-sub">MP4 Video</div>
-          </button>`;
+          html += `<a class="quality-btn" href="${dlUrl}" target="_blank" rel="noopener">
+            <div class="q-label">${label}${isHD ? '<span class="q-badge">HD</span>' : ''}</div>
+            <div class="q-sub">${size ? size + ' · ' : ''}MP4</div>
+          </a>`;
         });
         html += `</div>`;
-      } else {
-        // Fallback single download
-        const fallback = dlData?.url || dlData?.downloadUrl || dlData?.link || '';
-        if (fallback) {
-          html += `<div class="section-label">Video</div><div class="quality-grid">
-            <button class="quality-btn" onclick="dl('${fallback}','${title}.mp4')">
-              <div class="q-label">Download <span class="q-badge">HD</span></div>
-              <div class="q-sub">Best Quality · MP4</div>
-            </button></div>`;
-        }
       }
 
-      // Audio
-      const audioUrl = audioData?.url || audioData?.downloadUrl || audioData?.link || audioData?.audioUrl || '';
-      if (audioUrl) {
-        html += `<div class="section-label">Audio Only</div>
-          <button class="audio-btn" onclick="dl('${audioUrl}','${title}.mp3')">
+      // Audio — Y2mate returns data.links.mp3
+      const mp3    = data.links?.mp3 || data.mp3 || data.audio || {};
+      const mp3Keys= Object.keys(mp3);
+
+      if (mp3Keys.length > 0) {
+        html += `<div class="section-label">Audio Only</div>`;
+        mp3Keys.slice(0,1).forEach(key => {
+          const fmt    = mp3[key];
+          const dlUrl  = fmt.url || fmt.link || fmt.downloadUrl || '';
+          const size   = fmt.size || '';
+          html += `<a class="audio-btn" href="${dlUrl}" target="_blank" rel="noopener">
             <span style="font-size:1.2rem">🎵</span>
-            <div class="audio-details">Download MP3 <small>Audio only · Best quality</small></div>
-          </button>`;
+            <div class="audio-details">Download MP3 <small>${size ? size + ' · ' : ''}Audio only</small></div>
+          </a>`;
+        });
       }
 
       if (!html) {
         html = `<p style="color:var(--grey);text-align:center;padding:1rem;font-size:0.88rem">
-          ⚠️ No download links found for this video. Try a different video.</p>`;
+          ⚠️ No download links found. Try a different video.</p>`;
       }
 
       dlEl.innerHTML = html;
       card.style.display = 'block';
       setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 100);
     }
-
-    function dl(url, filename) {
-      if (!url) { alert('Download link not available for this quality.'); return; }
-      const a = document.createElement('a');
-      a.href = url; a.download = filename; a.target = '_blank'; a.rel = 'noopener';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
   </script>
 </body>
-  </html>
-      
+</html>
