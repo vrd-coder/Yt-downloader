@@ -7,28 +7,44 @@ export default async function handler(req, res) {
   const { url, type } = req.query;
   if (!url) { res.status(400).json({ error: 'url required' }); return; }
 
-  try {
-    // Cobalt API - completely free, no key needed
-    const response = await fetch('https://api.cobalt.tools/api/json', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        url: url,
-        vCodec: 'h264',
-        vQuality: type === 'audio' ? '128' : '1080',
-        aFormat: 'mp3',
-        isAudioOnly: type === 'audio',
-        isNoTTWatermark: true,
-        isTTFullAudio: false,
-      })
-    });
+  // Multiple Cobalt instances - try each one
+  const instances = [
+    'https://api.cobalt.tools/api/json',
+    'https://cobalt.api.nadeko.bot/api/json',
+    'https://cobalt.urdtv.ru/api/json',
+  ];
 
-    const data = await response.json();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message || 'Server error' });
+  const body = JSON.stringify({
+    url: url,
+    vCodec: 'h264',
+    vQuality: type === 'audio' ? '128' : '1080',
+    aFormat: 'mp3',
+    isAudioOnly: type === 'audio',
+    isNoTTWatermark: true,
+  });
+
+  for (const instance of instances) {
+    try {
+      const response = await fetch(instance, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: body
+      });
+
+      if (response.status === 429) continue; // rate limited, try next
+
+      const data = await response.json();
+      if (data?.status === 'error') continue; // error, try next
+
+      res.status(200).json(data);
+      return;
+    } catch (err) {
+      continue; // try next instance
+    }
   }
+
+  res.status(429).json({ error: 'All servers busy. Please try again in a moment.' });
 }
