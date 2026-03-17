@@ -47,18 +47,18 @@
     .video-info{display:flex;gap:1.25rem;padding:1.25rem;border-bottom:1px solid var(--border)}
     .video-thumb{width:140px;height:90px;object-fit:cover;border-radius:10px;flex-shrink:0;background:var(--dark4)}
     .video-details{flex:1;min-width:0}
-    .video-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;line-height:1.4;margin-bottom:0.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .video-title{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;line-height:1.4;margin-bottom:0.5rem}
     .video-meta{display:flex;gap:0.75rem;flex-wrap:wrap}
     .meta-tag{font-size:0.72rem;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:0.2rem 0.55rem;color:var(--grey-light)}
     .meta-tag.red{background:rgba(255,0,51,0.1);border-color:rgba(255,0,51,0.2);color:#ff6680}
     .download-section{padding:1.25rem}
     .section-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--grey);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem}
     .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-    .quality-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.65rem;margin-bottom:1.25rem}
-    .quality-btn{background:var(--dark4);border:1px solid var(--border);border-radius:12px;padding:0.75rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left;color:var(--white);font-family:'DM Sans',sans-serif;text-decoration:none;display:block}
-    .quality-btn:hover{border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.06);transform:translateY(-1px)}
-    .q-label{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:0.2rem}
-    .q-sub{font-size:0.72rem;color:var(--grey)}
+    .dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:1.25rem}
+    .dl-btn{background:var(--dark4);border:1px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s;text-align:left;color:var(--white);font-family:'DM Sans',sans-serif;text-decoration:none;display:block}
+    .dl-btn:hover{border-color:rgba(255,0,51,0.4);background:rgba(255,0,51,0.06);transform:translateY(-1px)}
+    .dl-btn .q-label{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:0.2rem}
+    .dl-btn .q-sub{font-size:0.72rem;color:var(--grey)}
     .q-badge{display:inline-block;font-size:0.62rem;background:rgba(255,0,51,0.15);color:#ff6680;border-radius:4px;padding:0.1rem 0.35rem;margin-left:0.3rem;font-weight:700}
     .audio-btn{width:100%;background:linear-gradient(135deg,rgba(255,0,51,0.1),rgba(255,0,51,0.05));border:1px solid rgba(255,0,51,0.2);border-radius:12px;padding:0.85rem 1.25rem;cursor:pointer;transition:all 0.2s;color:var(--white);font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:0.75rem;text-decoration:none}
     .audio-btn:hover{background:linear-gradient(135deg,rgba(255,0,51,0.18),rgba(255,0,51,0.1));transform:translateY(-1px)}
@@ -82,7 +82,7 @@
       .steps{grid-template-columns:1fr}
       .search-box{flex-wrap:wrap}
       .btn-fetch{width:100%;justify-content:center;display:flex}
-      .quality-grid{grid-template-columns:1fr 1fr}
+      .dl-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -144,6 +144,11 @@
       if (e.key === 'Enter') fetchVideo();
     });
 
+    function getVideoId(url) {
+      const m = url.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/);
+      return m ? m[1] : '';
+    }
+
     function showLoading(msg) {
       document.getElementById('loading-text').textContent = msg || 'Fetching video…';
       document.getElementById('status-loading').style.display = 'flex';
@@ -169,17 +174,23 @@
 
       const btn = document.getElementById('fetch-btn');
       btn.disabled = true; btn.textContent = 'Fetching…';
-      showLoading('Fetching video details…');
 
+      const vidId = getVideoId(url);
+      const thumb = vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '';
+
+      // Fetch both video and audio simultaneously
+      showLoading('Fetching video…');
       try {
-        const res = await fetch(`/api/fetch?url=${encodeURIComponent(url)}`);
-        const data = await res.json();
+        const [videoRes, audioRes] = await Promise.all([
+          fetch(`/api/fetch?url=${encodeURIComponent(url)}&type=video`),
+          fetch(`/api/fetch?url=${encodeURIComponent(url)}&type=audio`)
+        ]);
 
-        if (!res.ok || data.error) throw new Error(data.error || 'Failed to fetch video');
-        if (!data) throw new Error('No data returned');
+        const videoData = await videoRes.json();
+        const audioData = await audioRes.json();
 
         hideStatus();
-        renderResult(data, url);
+        renderResult(videoData, audioData, url, thumb, vidId);
       } catch(err) {
         showError(err.message || 'Something went wrong. Please try again.');
       } finally {
@@ -187,73 +198,56 @@
       }
     }
 
-    function renderResult(data, originalUrl) {
+    function renderResult(videoData, audioData, url, thumb, vidId) {
       const card = document.getElementById('result-card');
       const info = document.getElementById('video-info');
       const dlEl = document.getElementById('download-section');
 
-      // Y2mate returns: title, thumbnail, duration, links { mp4: {...}, mp3: {...} }
-      const title    = data.title || 'YouTube Video';
-      const thumb    = data.thumbnail || data.thumb || '';
-      const duration = data.duration || data.dur || '';
-
-      // Get video ID for fallback thumbnail
-      const vidMatch = originalUrl.match(/(?:v=|youtu\.be\/|shorts\/)([a-zA-Z0-9_-]{11})/);
-      const vidId    = vidMatch ? vidMatch[1] : '';
-      const thumbUrl = thumb || (vidId ? `https://img.youtube.com/vi/${vidId}/mqdefault.jpg` : '');
+      // Cobalt returns: status, url, filename (for tunnel/redirect)
+      const videoUrl = videoData?.url || '';
+      const audioUrl = audioData?.url || '';
+      const filename = videoData?.filename || videoData?.name || 'video';
+      const title    = filename.replace(/\.[^.]+$/, '') || 'YouTube Video';
 
       info.innerHTML = `
-        <img class="video-thumb" src="${thumbUrl}" alt="thumb" onerror="this.style.display='none'"/>
+        <img class="video-thumb" src="${thumb}" alt="thumbnail" onerror="this.style.display='none'"/>
         <div class="video-details">
           <div class="video-title">${title}</div>
           <div class="video-meta">
-            ${duration ? `<span class="meta-tag red">⏱ ${duration}</span>` : ''}
-            <span class="meta-tag">YouTube</span>
+            <span class="meta-tag red">▶ YouTube</span>
+            <span class="meta-tag">HD Available</span>
           </div>
         </div>`;
 
       let html = '';
 
-      // Video formats — Y2mate returns data.links.mp4
-      const mp4 = data.links?.mp4 || data.mp4 || data.video || {};
-      const mp4Keys = Object.keys(mp4);
-
-      if (mp4Keys.length > 0) {
-        html += `<div class="section-label">Video Quality</div><div class="quality-grid">`;
-        mp4Keys.forEach(key => {
-          const fmt   = mp4[key];
-          const label = fmt.q || fmt.quality || key;
-          const dlUrl = fmt.url || fmt.link || fmt.downloadUrl || '';
-          const size  = fmt.size || '';
-          const isHD  = label.includes('720') || label.includes('1080') || label.includes('4K');
-          html += `<a class="quality-btn" href="${dlUrl}" target="_blank" rel="noopener">
-            <div class="q-label">${label}${isHD ? '<span class="q-badge">HD</span>' : ''}</div>
-            <div class="q-sub">${size ? size + ' · ' : ''}MP4</div>
-          </a>`;
-        });
-        html += `</div>`;
+      if (videoUrl) {
+        html += `
+          <div class="section-label">Video</div>
+          <div class="dl-grid">
+            <a class="dl-btn" href="${videoUrl}" target="_blank" rel="noopener">
+              <div class="q-label">1080p <span class="q-badge">HD</span></div>
+              <div class="q-sub">Best Quality · MP4</div>
+            </a>
+            <a class="dl-btn" href="/api/fetch?url=${encodeURIComponent(url)}&type=video&q=720" target="_blank" rel="noopener">
+              <div class="q-label">720p <span class="q-badge">HD</span></div>
+              <div class="q-sub">Good Quality · MP4</div>
+            </a>
+          </div>`;
       }
 
-      // Audio — Y2mate returns data.links.mp3
-      const mp3    = data.links?.mp3 || data.mp3 || data.audio || {};
-      const mp3Keys= Object.keys(mp3);
-
-      if (mp3Keys.length > 0) {
-        html += `<div class="section-label">Audio Only</div>`;
-        mp3Keys.slice(0,1).forEach(key => {
-          const fmt    = mp3[key];
-          const dlUrl  = fmt.url || fmt.link || fmt.downloadUrl || '';
-          const size   = fmt.size || '';
-          html += `<a class="audio-btn" href="${dlUrl}" target="_blank" rel="noopener">
+      if (audioUrl) {
+        html += `
+          <div class="section-label">Audio Only</div>
+          <a class="audio-btn" href="${audioUrl}" target="_blank" rel="noopener">
             <span style="font-size:1.2rem">🎵</span>
-            <div class="audio-details">Download MP3 <small>${size ? size + ' · ' : ''}Audio only</small></div>
+            <div class="audio-details">Download MP3 <small>Audio only · Best quality</small></div>
           </a>`;
-        });
       }
 
-      if (!html) {
+      if (!videoUrl && !audioUrl) {
         html = `<p style="color:var(--grey);text-align:center;padding:1rem;font-size:0.88rem">
-          ⚠️ No download links found. Try a different video.</p>`;
+          ⚠️ Could not get download links. Try a different video or check if it's age-restricted.</p>`;
       }
 
       dlEl.innerHTML = html;
@@ -262,4 +256,5 @@
     }
   </script>
 </body>
-</html>
+  </html>
+        
